@@ -42,7 +42,7 @@ func PatchItems() []models.PatchItem {
 	return []models.PatchItem{{
 		Op:    models.PatchOperation_REPLACE,
 		Path:  "/nfStatus",
-		Value: models.NrfNfManagementNfStatus_REGISTERED,
+		Value: models.Nrf_NFMgmt_NFStatus_REGISTERED,
 	}}
 }
 
@@ -53,7 +53,7 @@ type Registrar interface {
 	// openapi.GenericOpenAPIError, so the Runner can classify a 404. ctx is cancelled
 	// on shutdown only: bound the request below the heartbeat interval.
 	UpdateNFInstance(ctx context.Context, patchItems []models.PatchItem) (
-		models.NrfNfManagementNfProfile, *models.ProblemDetails, error)
+		models.Nrf_NFMgmt_NFProfile, *models.ProblemDetails, error)
 	// Returns the heartBeatTimer the NRF assigned, in seconds, 0 for none. May retry
 	// internally until it succeeds or ctx is done.
 	RegisterNFInstance(ctx context.Context) (int32, error)
@@ -191,8 +191,7 @@ func (r *Runner) guardedOnce(ctx context.Context) (status hbStatus) {
 }
 
 // A heartBeatTimer of 0 keeps the current interval: the int32 model cannot tell an explicit
-// 0 from an absent field, so it must not read as disable the way the legacy openapi
-// nrf/service.go helper reads it.
+// 0 from an absent field, so it must not read as disable.
 func (r *Runner) once(ctx context.Context) hbStatus {
 	nf, problemDetails, err := r.registrar.UpdateNFInstance(ctx, PatchItems())
 	if err == nil && problemDetails == nil {

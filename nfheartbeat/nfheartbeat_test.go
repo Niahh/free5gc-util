@@ -16,7 +16,7 @@ import (
 )
 
 type fakeRegistrar struct {
-	updateNf      models.NrfNfManagementNfProfile
+	updateNf      models.Nrf_NFMgmt_NFProfile
 	updatePd      *models.ProblemDetails
 	updateErr     error
 	updateDelay   time.Duration
@@ -29,7 +29,7 @@ type fakeRegistrar struct {
 }
 
 func (f *fakeRegistrar) UpdateNFInstance(_ context.Context, _ []models.PatchItem) (
-	models.NrfNfManagementNfProfile, *models.ProblemDetails, error,
+	models.Nrf_NFMgmt_NFProfile, *models.ProblemDetails, error,
 ) {
 	f.updateCalls++
 	if f.panicOnUpdate {
@@ -154,7 +154,7 @@ func TestTick(t *testing.T) {
 
 	tests := []struct {
 		name          string
-		updateNf      models.NrfNfManagementNfProfile
+		updateNf      models.Nrf_NFMgmt_NFProfile
 		updatePd      *models.ProblemDetails
 		updateErr     error
 		panicOnUpdate bool
@@ -165,7 +165,7 @@ func TestTick(t *testing.T) {
 	}{
 		{
 			name:         "200 adopts the returned timer",
-			updateNf:     models.NrfNfManagementNfProfile{HeartBeatTimer: 25},
+			updateNf:     models.Nrf_NFMgmt_NFProfile{HeartBeatTimer: 25},
 			ticks:        1,
 			wantInterval: 25 * time.Second,
 		},
@@ -176,7 +176,7 @@ func TestTick(t *testing.T) {
 		},
 		{
 			name:         "200 above the NRF profile cap is capped",
-			updateNf:     models.NrfNfManagementNfProfile{HeartBeatTimer: MaxTimer + 1},
+			updateNf:     models.Nrf_NFMgmt_NFProfile{HeartBeatTimer: MaxTimer + 1},
 			ticks:        1,
 			wantInterval: time.Duration(MaxTimer) * time.Second,
 		},
@@ -421,7 +421,7 @@ func TestLoopAdoptsNewInterval(t *testing.T) {
 
 	synctest.Test(t, func(t *testing.T) {
 		registrar := &fakeRegistrar{
-			updateNf: models.NrfNfManagementNfProfile{HeartBeatTimer: adoptedTimer},
+			updateNf: models.Nrf_NFMgmt_NFProfile{HeartBeatTimer: adoptedTimer},
 		}
 		runner := newTestRunner(t, registrar, configFallback(0))
 
